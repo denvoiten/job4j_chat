@@ -1,7 +1,6 @@
 package ru.chat.domain;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -11,9 +10,8 @@ import java.util.Objects;
 @Setter
 @Getter
 @RequiredArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "person")
+@Table(name = "persons")
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
