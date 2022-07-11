@@ -9,18 +9,14 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.chat</groupId>
-    <artifactId>job4j_chat</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>job4j_chat</name>
-    <description>job4j_chat</description>
+    <artifactId>chat</artifactId>
+    <version>1</version>
+    <name>chat</name>
+    <description>chat</description>
     <properties>
         <java.version>11</java.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
