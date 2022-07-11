@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS messages (
     room_id INT REFERENCES rooms(id)
 );
 
-INSERT INTO roles(name) VALUES ('ROLE_USER'), ('ROLE_ADMIN');
+INSERT INTO roles(name) VALUES ('ROLE_USER'), ('ROLE_ADMIN'), ('ROLE_MODERATOR');
 INSERT INTO persons(login, password, role_id) VALUES ('user', 'user', 1), ('admin', 'admin', 2);
 INSERT INTO rooms(name) VALUES ('first'), ('second');
 INSERT INTO messages(text, created, person_id, room_id)

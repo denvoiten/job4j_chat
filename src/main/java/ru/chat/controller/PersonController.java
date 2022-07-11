@@ -38,7 +38,7 @@ public class PersonController {
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody Person person) {
-        this.personService.create(person);
+        personService.create(person);
         return ResponseEntity.ok().build();
     }
 

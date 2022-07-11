@@ -27,6 +27,6 @@ public class PersonService {
     }
 
     public void delete(int id) {
-        personRepository.findById(id).ifPresent(value -> personRepository.delete(value));
+        personRepository.findById(id).ifPresent(person -> personRepository.delete(person));
     }
 }

@@ -28,11 +28,12 @@ public class Message {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public static Message of(int id, String text, Person person) {
+    public static Message of(int id, String text, Person person, Room room) {
         var message = new Message();
         message.id = id;
         message.text = text;
         message.person = person;
+        message.room = room;
         message.created = new Timestamp(System.currentTimeMillis());
         return message;
     }
