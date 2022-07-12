@@ -23,9 +23,9 @@ public class PersonController {
 
     @GetMapping("{id}")
     public ResponseEntity<Person> findById(@PathVariable int id) {
-        return personService.findById(id).isPresent()
-                ? new ResponseEntity<>(personService.findById(id).get(), HttpStatus.OK)
-                : new ResponseEntity<>(new Person(), HttpStatus.NOT_FOUND);
+        return personService.findById(id)
+                .map(person -> new ResponseEntity<>(person, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(new Person(), HttpStatus.NOT_FOUND));
     }
 
     @PostMapping

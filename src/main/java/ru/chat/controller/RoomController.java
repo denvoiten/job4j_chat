@@ -22,9 +22,9 @@ public class RoomController {
 
     @GetMapping("{id}")
     public ResponseEntity<Room> findById(@PathVariable int id) {
-        return roomService.findById(id).isPresent()
-                ? new ResponseEntity<>(roomService.findById(id).get(), HttpStatus.OK)
-                : new ResponseEntity<>(new Room(), HttpStatus.NOT_FOUND);
+        return roomService.findById(id)
+                .map(room -> new ResponseEntity<>(room, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(new Room(), HttpStatus.NOT_FOUND));
     }
 
     @PostMapping

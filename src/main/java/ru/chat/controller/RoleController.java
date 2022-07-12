@@ -22,9 +22,9 @@ public class RoleController {
 
     @GetMapping("{id}")
     public ResponseEntity<Role> findById(@PathVariable int id) {
-        return roleService.findById(id).isPresent()
-                ? new ResponseEntity<>(roleService.findById(id).get(), HttpStatus.OK)
-                : new ResponseEntity<>(new Role(), HttpStatus.NOT_FOUND);
+        return roleService.findById(id)
+                .map(role -> new ResponseEntity<>(role, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(new Role(), HttpStatus.NOT_FOUND));
     }
 
     @PostMapping

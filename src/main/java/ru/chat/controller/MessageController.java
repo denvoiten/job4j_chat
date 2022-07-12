@@ -27,9 +27,9 @@ public class MessageController {
 
     @GetMapping("{id}")
     public ResponseEntity<Message> findById(@PathVariable int id) {
-        return messageService.findById(id).isPresent()
-                ? new ResponseEntity<>(messageService.findById(id).get(), HttpStatus.OK)
-                : new ResponseEntity<>(new Message(), HttpStatus.NOT_FOUND);
+        return messageService.findById(id)
+                .map(message -> new ResponseEntity<>(message, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(new Message(), HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/rooms/{id}")
