@@ -25,6 +25,12 @@ public class Role {
         return role;
     }
 
+    public static Role of(int id) {
+        var role = new Role();
+        role.id = id;
+        return role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

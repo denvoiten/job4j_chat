@@ -22,6 +22,15 @@ public class Person {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    public static Person of(int id, String login, String password, Role role) {
+        var person = new Person();
+        person.id = id;
+        person.login = login;
+        person.password = password;
+        person.role = Role.of(role.getId());
+        return person;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
