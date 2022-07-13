@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.chat.domain.Role;
 import ru.chat.service.RoleService;
 
@@ -24,11 +25,14 @@ public class RoleController {
     public ResponseEntity<Role> findById(@PathVariable int id) {
         return roleService.findById(id)
                 .map(role -> new ResponseEntity<>(role, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Role(), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role with id: " + id + " not found"));
     }
 
     @PostMapping
     public ResponseEntity<Role> create(@RequestBody Role role) {
+        if (role.getName() == null) {
+            throw new NullPointerException("roleName cannot be empty");
+        }
         return new ResponseEntity<>(
                 roleService.create(role),
                 HttpStatus.CREATED
@@ -37,6 +41,9 @@ public class RoleController {
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody Role role) {
+        if (role.getName() == null) {
+            throw new NullPointerException("roleName cannot be empty");
+        }
         roleService.create(role);
         return ResponseEntity.ok().build();
     }

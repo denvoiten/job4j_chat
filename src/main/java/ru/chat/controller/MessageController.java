@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.chat.domain.Message;
 import ru.chat.service.MessageService;
 
@@ -29,12 +30,13 @@ public class MessageController {
     public ResponseEntity<Message> findById(@PathVariable int id) {
         return messageService.findById(id)
                 .map(message -> new ResponseEntity<>(message, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Message(), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Message with id: " + id + " not found"));
     }
 
     @PostMapping("/rooms/{id}")
     public ResponseEntity<Message> create(@RequestBody Message message,
                                           @PathVariable int id) {
+        validate(message);
         return new ResponseEntity<>(
                 messageService.create(message, id),
                 HttpStatus.CREATED
@@ -44,6 +46,7 @@ public class MessageController {
     @PutMapping("/rooms/{id}")
     public ResponseEntity<Void> update(@RequestBody Message message,
                                        @PathVariable int id) {
+        validate(message);
         messageService.create(message, id);
         return ResponseEntity.ok().build();
     }
@@ -52,5 +55,17 @@ public class MessageController {
     public ResponseEntity<Void> delete(@PathVariable int id) {
         messageService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    private void validate(Message message) {
+        if (message.getRoom() == null) {
+            throw new NullPointerException("RoomID cannot be empty.");
+        }
+        if (message.getPerson() == null) {
+            throw new NullPointerException("PersonID cannot be empty.");
+        }
+        if (message.getText() == null) {
+            throw new NullPointerException("Text cannot be empty.");
+        }
     }
 }

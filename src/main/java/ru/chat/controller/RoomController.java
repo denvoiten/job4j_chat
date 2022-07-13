@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.chat.domain.Room;
 import ru.chat.service.RoomService;
 
@@ -24,11 +25,14 @@ public class RoomController {
     public ResponseEntity<Room> findById(@PathVariable int id) {
         return roomService.findById(id)
                 .map(room -> new ResponseEntity<>(room, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Room(), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Room with id: " + id + " not found"));
     }
 
     @PostMapping
     public ResponseEntity<Room> create(@RequestBody Room room) {
+        if (room.getName() == null) {
+            throw new NullPointerException("roomName cannot be empty.");
+        }
         return new ResponseEntity<>(
                 roomService.create(room),
                 HttpStatus.CREATED
@@ -37,6 +41,9 @@ public class RoomController {
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody Room room) {
+        if (room.getName() == null) {
+            throw new NullPointerException("roomName cannot be empty.");
+        }
         roomService.create(room);
         return ResponseEntity.ok().build();
     }
