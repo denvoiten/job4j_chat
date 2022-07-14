@@ -9,6 +9,7 @@ import ru.chat.domain.Room;
 import ru.chat.service.RoomService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/rooms")
@@ -17,8 +18,9 @@ public class RoomController {
     private RoomService roomService;
 
     @GetMapping
-    public List<Room> findAll() {
-        return roomService.findAll();
+    public ResponseEntity<List<Room>> findAll() {
+
+        return ResponseEntity.of(Optional.of(roomService.findAll()));
     }
 
     @GetMapping("{id}")
