@@ -21,7 +21,7 @@ public class MessageController {
         return messageService.findAll();
     }
 
-    @GetMapping("/rooms/{id}")
+    @GetMapping("/room/{id}")
     public List<Message> findAllByRoomId(@PathVariable int id) {
         return messageService.findAllByRoom(id);
     }
@@ -33,7 +33,7 @@ public class MessageController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Message with id: " + id + " not found"));
     }
 
-    @PostMapping("/rooms/{id}")
+    @PostMapping("/room/{id}")
     public ResponseEntity<Message> create(@RequestBody Message message,
                                           @PathVariable int id) {
         validate(message);
@@ -43,7 +43,7 @@ public class MessageController {
         );
     }
 
-    @PutMapping("/rooms/{id}")
+    @PutMapping("/room/{id}")
     public ResponseEntity<Void> update(@RequestBody Message message,
                                        @PathVariable int id) {
         validate(message);
