@@ -54,7 +54,7 @@ java -jar chat-1.jar
 ![](images/message.png)
 
 Изменение текста сообщения:
-![](images/edit message.png)
+![](images/editMessage.png)
 
 Вывод всех сообщений комнаты:
 ![](images/allMessagesRoom.png)
