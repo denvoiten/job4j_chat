@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.chat.domain.Person;
+import ru.chat.domain.Role;
 import ru.chat.service.PersonService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,6 +82,30 @@ public class PersonController {
             }
         }));
         LOGGER.error(e.getLocalizedMessage());
+    }
+
+    @PatchMapping
+    public ResponseEntity<Person> patch(@RequestBody Person person) {
+        var current = personService.findById(person.getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Person with id = %s, not found", person.getId())));
+        String login = person.getLogin();
+        String password = person.getPassword();
+        Role role = person.getRole();
+        if (login != null) {
+            current.setLogin(login);
+        }
+        if (password != null) {
+            current.setPassword(password);
+        }
+        if (role != null) {
+            current.setRole(role);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(personService.create(current));
     }
 
     private void validate(Person person) {

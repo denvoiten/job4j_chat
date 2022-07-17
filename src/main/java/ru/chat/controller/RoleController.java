@@ -53,4 +53,19 @@ public class RoleController {
         roleService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping
+    public ResponseEntity<Role> patch(@RequestBody Role role) {
+        var current = roleService.findById(role.getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Role with id = %s, not found", role.getId())));
+        String name = role.getName();
+        if (name != null) {
+            current.setName(name);
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(roleService.create(current));
+    }
 }

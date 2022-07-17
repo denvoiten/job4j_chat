@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.chat.domain.Message;
+import ru.chat.domain.Person;
+import ru.chat.domain.Room;
 import ru.chat.service.MessageService;
 
 import java.util.List;
@@ -55,6 +57,31 @@ public class MessageController {
     public ResponseEntity<Void> delete(@PathVariable int id) {
         messageService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/room/{id}")
+    public ResponseEntity<Message> patch(@RequestBody Message message,
+                                         @PathVariable int id) {
+        var current = messageService.findById(message.getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Message with id = %s, not found", message.getId())));
+        String text = message.getText();
+        Person person = message.getPerson();
+        Room room = message.getRoom();
+        if (text != null) {
+            current.setText(text);
+        }
+        if (person != null) {
+            current.setPerson(person);
+        }
+        if (room != null) {
+            current.setRoom(room);
+        }
+        messageService.create(current, id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(current);
     }
 
     private void validate(Message message) {
