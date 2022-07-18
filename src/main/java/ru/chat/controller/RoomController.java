@@ -3,11 +3,14 @@ package ru.chat.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.chat.domain.Room;
+import ru.chat.handlers.Operation;
 import ru.chat.service.RoomService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +34,7 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Room> create(@RequestBody Room room) {
+    public ResponseEntity<Room> create(@Valid @RequestBody Room room) {
         if (room.getName() == null) {
             throw new NullPointerException("roomName cannot be empty.");
         }
@@ -42,7 +45,8 @@ public class RoomController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody Room room) {
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Void> update(@Valid @RequestBody Room room) {
         if (room.getName() == null) {
             throw new NullPointerException("roomName cannot be empty.");
         }
@@ -51,13 +55,15 @@ public class RoomController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    @Validated(Operation.OnDelete.class)
+    public ResponseEntity<Void> delete(@Valid @PathVariable int id) {
         roomService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping
-    public ResponseEntity<Room> patch(@RequestBody Room room) {
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Room> patch(@Valid @RequestBody Room room) {
         var current = roomService.findById(room.getId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,

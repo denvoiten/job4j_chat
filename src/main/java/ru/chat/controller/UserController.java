@@ -1,10 +1,13 @@
 package ru.chat.controller;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.chat.domain.Person;
+import ru.chat.handlers.Operation;
 import ru.chat.service.PersonService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +24,8 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody Person user) {
+    @Validated(Operation.OnCreate.class)
+    public void signUp(@Valid @RequestBody Person user) {
         if (user.getLogin().isEmpty() || user.getPassword().isEmpty()) {
             throw new NullPointerException("Empty login or password");
         }

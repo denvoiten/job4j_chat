@@ -3,8 +3,11 @@ package ru.chat.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import ru.chat.handlers.Operation;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -16,16 +19,21 @@ import java.util.Objects;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "Id must be non null",
+            groups = {Operation.OnUpdate.class, Operation.OnDelete.class})
     private int id;
+    @NotBlank(message = "Text must be not empty")
     private String text;
     private Timestamp created;
 
     @ManyToOne
     @JoinColumn(name = "person_id")
+    @NotNull(message = "You must set the person")
     private Person person;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
+    @NotNull(message = "You must set the room")
     private Room room;
 
     public static Message of(int id, String text, Person person, Room room) {

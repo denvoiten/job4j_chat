@@ -3,13 +3,16 @@ package ru.chat.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.chat.domain.Message;
 import ru.chat.domain.Person;
 import ru.chat.domain.Room;
+import ru.chat.handlers.Operation;
 import ru.chat.service.MessageService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -36,7 +39,8 @@ public class MessageController {
     }
 
     @PostMapping("/room/{id}")
-    public ResponseEntity<Message> create(@RequestBody Message message,
+    @Validated(Operation.OnCreate.class)
+    public ResponseEntity<Message> create(@Valid@RequestBody Message message,
                                           @PathVariable int id) {
         validate(message);
         return new ResponseEntity<>(
@@ -46,7 +50,8 @@ public class MessageController {
     }
 
     @PutMapping("/room/{id}")
-    public ResponseEntity<Void> update(@RequestBody Message message,
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Void> update(@Valid@RequestBody Message message,
                                        @PathVariable int id) {
         validate(message);
         messageService.create(message, id);
@@ -54,13 +59,15 @@ public class MessageController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    @Validated(Operation.OnDelete.class)
+    public ResponseEntity<Void> delete(@Valid @PathVariable int id) {
         messageService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/room/{id}")
-    public ResponseEntity<Message> patch(@RequestBody Message message,
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Message> patch(@Valid @RequestBody Message message,
                                          @PathVariable int id) {
         var current = messageService.findById(message.getId())
                 .orElseThrow(() -> new ResponseStatusException(
